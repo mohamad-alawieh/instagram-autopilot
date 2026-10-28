@@ -44,7 +44,7 @@ CONCRETE_RE = re.compile(r"\$\s?\d|\b\d[\d,.]*\b|(?<!^)\b[A-Z][a-z]{2,}\b", re.M
 
 ASKS = [
     (re.compile(r"(?i)\bcomment (?:the word |\")?[A-Z0-9]{2,}\b"), "comment a keyword"),
-    (re.compile(r"(?i)\b(?:dm|message) me\b"), "DM me"),
+    (re.compile(r"(?i)\b(?:dm|message) (?:me|us)\b"), "DM"),
     (re.compile(r"(?i)\bsave (?:this|it)\b"), "save this"),
     (re.compile(r"(?i)\bshare (?:this|it)\b"), "share this"),
     (re.compile(r"(?i)\bfollow (?:me|for)\b"), "follow"),
