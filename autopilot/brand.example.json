@@ -1,0 +1,50 @@
+{
+  "name": "Brightside Bakery",
+  "handle": "brightside.bakery",
+  "tagline": "Fresh bread, baked every morning",
+  "industry": "Bakery and café",
+  "audience": "Families and office workers in Downtown Beirut who want fresh bread, cakes for occasions, and quick breakfasts",
+  "language": "English",
+  "location": "Beirut, Lebanon",
+  "contact": {
+    "phone": "+961 00 000 000",
+    "email": "hello@example.com",
+    "website": "example.com",
+    "link_in_bio": "linktr.ee/example"
+  },
+  "offers": [
+    {"name": "Birthday cake", "price": "$35", "details": "Serves 10, custom message, order 48h ahead"},
+    {"name": "Breakfast box", "price": "$12", "details": "Coffee, 2 pastries, fresh juice"}
+  ],
+  "pillars": [
+    "Behind the scenes: how we bake",
+    "Tips: storing bread, choosing cakes",
+    "Seasonal specials and new items",
+    "Offers and ordering"
+  ],
+  "avoid": ["politics", "religion", "competitors by name", "invented statistics or reviews"],
+  "colors": {
+    "bg1": "#2a1606",
+    "bg2": "#4a2a0e",
+    "bg3": "#7a4a16",
+    "accent": "#ffc46b",
+    "button": "#e0892b",
+    "text": "#ffffff"
+  },
+  "font": "Poppins",
+  "logo": "autopilot/assets/logo.png",
+  "schedule": {
+    "timezone": "Asia/Beirut",
+    "time": "10:00",
+    "days": {
+      "Mon": "carousel",
+      "Wed": "carousel",
+      "Thu": "reel",
+      "Fri": "offer"
+    },
+    "plan_day": "Thu"
+  },
+  "hashtags_always": ["#BrightsideBakery", "#Beirut"],
+  "media_base_url": "https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO/media/",
+  "repo": "YOUR-GITHUB-USERNAME/YOUR-REPO"
+}

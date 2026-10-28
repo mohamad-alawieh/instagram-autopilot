@@ -1,0 +1,10 @@
+{
+  "name": "instagram-autopilot",
+  "description": "A free Instagram manager for any business: a setup wizard that learns your page, makes your brand and logo, and walks you through connecting Instagram via a free Meta app and GitHub; then a weekly run that plans, writes, designs and quality-checks carousels, offers and voiceover reels and auto-publishes them with GitHub Actions.",
+  "version": "1.0.0",
+  "author": { "name": "Mohamad Alawieh", "url": "https://github.com/mohamad-alawieh" },
+  "homepage": "https://github.com/mohamad-alawieh/instagram-autopilot",
+  "repository": "https://github.com/mohamad-alawieh/instagram-autopilot",
+  "license": "MIT",
+  "keywords": ["instagram", "social media", "scheduler", "reels", "marketing", "automation", "free"]
+}

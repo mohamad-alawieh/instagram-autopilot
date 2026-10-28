@@ -1,0 +1,56 @@
+name: Instagram publisher
+
+on:
+  schedule:
+    - cron: "17 * * * *"      # every hour (minute 17); publishes anything due
+    - cron: "30 7 1,15 * *"  # token refresh on the 1st and 15th
+  workflow_dispatch:
+    inputs:
+      force_id:
+        description: "Post id from schedule.json to publish right now (optional)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '17 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish due posts
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          FORCE_ID: ${{ github.event.inputs.force_id }}
+        run: python3 autopilot/publish.py
+      - name: Record published posts
+        if: always()
+        run: |
+          if ! git diff --quiet autopilot/published.json; then
+            git config user.name "autopilot-bot"
+            git config user.email "autopilot-bot@users.noreply.github.com"
+            git add autopilot/published.json
+            git commit -m "Record published Instagram posts [skip ci]"
+            git pull --rebase -q origin "${GITHUB_REF_NAME}"
+            git push -q origin HEAD:"${GITHUB_REF_NAME}"
+          fi
+
+  refresh-token:
+    if: github.event.schedule == '30 7 1,15 * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh long-lived Instagram token
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          NEW=$(curl -sf "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${IG_ACCESS_TOKEN}" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+          echo "::add-mask::$NEW"
+          gh secret set IG_ACCESS_TOKEN --repo "${GITHUB_REPOSITORY}" --body "$NEW"
+          echo "Token refreshed."

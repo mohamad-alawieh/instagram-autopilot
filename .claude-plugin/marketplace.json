@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "instagram-autopilot",
+  "description": "Free Instagram autopilot for businesses, run by Claude",
+  "owner": { "name": "Mohamad Alawieh", "url": "https://github.com/mohamad-alawieh" },
+  "plugins": [
+    {
+      "name": "instagram-autopilot",
+      "description": "Setup wizard + weekly AI content + free auto-publishing to Instagram via GitHub Actions.",
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/mohamad-alawieh/instagram-autopilot"
+    }
+  ]
+}
