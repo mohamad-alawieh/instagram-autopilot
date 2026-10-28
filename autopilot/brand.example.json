@@ -31,8 +31,10 @@
     "button": "#e0892b",
     "text": "#ffffff"
   },
-  "font": "Poppins",
+  "theme": "midnight",
   "logo": "autopilot/assets/logo.png",
+  "logo_on_light": "autopilot/assets/logo-dark.png",
+  "voice": "ryan",
   "schedule": {
     "timezone": "Asia/Beirut",
     "time": "10:00",

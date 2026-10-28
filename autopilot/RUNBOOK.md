@@ -38,6 +38,7 @@ Nothing here costs money: content is made in the Claude session, publishing is G
 
 - **carousel** (5 slides) / **single** (1 slide) / **offer** (1 slide, layout `offer`):
   write a post spec and run `python3 autopilot/render_post.py spec.json`. It prints the public URLs.
+  The look comes from `brand.json → theme`; never change it unless the owner asks.
   Folder name: `<yyyy>-<mm>-w<week-of-month>`. Look at every image; fix copy that was shrunk or looks crowded.
 - **reel**: follow the reel steps in QUALITY.md (hook score, beats), then
   `python3 autopilot/make_reel.py spec.json`. It prints `video` and `cover` URLs. Look at a few frames

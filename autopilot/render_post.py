@@ -21,7 +21,7 @@ Text that would overflow is shrunk automatically; the output is still worth a lo
 """
 import json, sys
 from html import escape
-from common import ROOT, MEDIA, load_brand, css, header, footer
+from common import ROOT, MEDIA, load_brand, css, header, footer, orbs_html
 
 W, H, LIMIT = 1080, 1350, 1350 - 150
 
@@ -32,8 +32,7 @@ def chk(items):
 
 def slide_html(brand, s, idx, total):
     lay = s.get("layout", "point")
-    orbs = ('<div class="orb" style="width:90px;height:90px;right:70px;top:190px"></div>'
-            '<div class="orb" style="width:180px;height:180px;left:-90px;top:980px;opacity:.55"></div>')
+    orbs = orbs_html(brand)
     swipe = '<div class="swipe">Swipe →</div>' if total > 1 and idx < total - 1 else ""
     pg = f'<div class="page">{idx + 1} / {total}</div>' if total > 2 and 0 < idx < total - 1 else ""
     if lay == "cover":
@@ -99,5 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.path.insert(0, str(ROOT / "autopilot"))
     main()

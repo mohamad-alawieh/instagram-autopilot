@@ -10,7 +10,9 @@ Suggest brand colors from an existing logo:
     python3 autopilot/make_logo.py colors path/to/logo.png
   Prints a JSON "colors" block you can paste into brand.json.
 
-Prepare an uploaded logo for dark backgrounds (trim, max 900px wide):
+Prepare an uploaded logo (trim, max 900px wide). Saves logo.png (used on dark themes)
+and logo-dark.png (used on light themes). If the owner has separate light and dark
+versions, prepare each and copy the right one over:
     python3 autopilot/make_logo.py prepare path/to/logo.png
 """
 import colorsys, json, sys
@@ -77,6 +79,7 @@ def prepare(path):
         im = im.resize((900, int(im.height * 900 / im.width)))
     ASSETS.mkdir(parents=True, exist_ok=True)
     im.save(ASSETS / "logo.png")
+    im.save(ASSETS / "logo-dark.png")  # same file for light themes; replace with a dark version if you have one
     # warn if the logo is mostly dark (would vanish on dark backgrounds)
     lum = [0.2126 * r + 0.7152 * g + 0.0722 * b for r, g, b, a in im.getdata() if a > 200]
     if lum and sum(lum) / len(lum) < 70:

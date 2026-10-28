@@ -50,15 +50,26 @@ Ask these, then read back a short summary and confirm it:
    - **No:** offer to create a simple one (a monogram badge with the name).
 7. **Brand colors:** "Use colors from your logo, or pick your own?" (default: from the logo).
 8. **Tone:** e.g. warm and friendly / bold and fun / calm and expert / premium.
-9. **Topics** (content pillars). Propose 4 pillars that fit the business, each with 2 example
+9. **Theme** (the visual style of every post and reel). There are 5:
+   - **midnight**: a dark gradient in their colors with glowing accents. Modern and techy.
+   - **clean**: a light off-white background, dark text and brand-color highlights. Friendly and airy.
+   - **bold**: a solid brand-color background, big white type and highlighter accents. Loud and punchy.
+   - **minimal**: pure white, black type, thin lines and one accent color. Calm and premium.
+   - **elegant**: a warm cream background, serif headlines and refined accents. Boutique and classic.
+   Once their logo and colors are ready (Part 3, steps 1–2), show them the real thing in their own brand:
+   `python3 autopilot/preview_themes.py theme-preview.jpg` makes one image with all 5 themes side by side.
+   Send it and ask them to pick a number. Don't commit the preview image.
+   Suggest one based on the business: food, kids or retail → clean or bold; tech → midnight;
+   law, clinics or finance → minimal; fashion, beauty or hospitality → elegant.
+10. **Topics** (content pillars). Propose 4 pillars that fit the business, each with 2 example
    post ideas. Let the owner edit. Example for a bakery: "Behind the scenes", "Tips and how-tos",
    "Seasonal specials", "Offers and ordering".
-10. **Things never to post:** default is politics, religion, competitors by name, and invented
+11. **Things never to post:** default is politics, religion, competitors by name, and invented
     numbers or reviews. Ask if they want to add anything.
-11. **Schedule:** posts per week (recommend **3 posts + 1 reel**; 2–7 is fine), which days,
+12. **Schedule:** posts per week (recommend **3 posts + 1 reel**; 2–7 is fine), which days,
     what time, and their time zone (IANA name, e.g. `Asia/Beirut`).
     Formats per day: `carousel` (5 slides), `single` (1 image), `reel` (voiceover video), `offer`.
-12. **Reel voice:** free AI voices: `ryan` (US male), `lessac` (US female, warm), `amy` (US female),
+13. **Reel voice:** free AI voices: `ryan` (US male), `lessac` (US female, warm), `amy` (US female),
     `alan` (UK male). Offer to make a 5-second sample of each.
 
 Then show **sample topics for the first week** (a table: day, format, topic) and ask for approval.
@@ -94,16 +105,22 @@ In their repo:
      if it's too dark for dark backgrounds; if so, ask for a light/white version.
    - Created: `python3 autopilot/make_logo.py create "<Name>" --accent "<hex>" --button "<hex>" --tagline "<short word>"`.
    - Show them the logo and get approval.
-2. **Colors:** `python3 autopilot/make_logo.py colors autopilot/assets/logo.png` suggests a palette.
-   The background must be dark enough for white text. Adjust if needed.
+2. **Colors:** `python3 autopilot/make_logo.py colors autopilot/assets/logo.png` suggests a palette
+   (6-digit hex colors only). For midnight and bold, the background colors must be dark or strong enough
+   for white text. Adjust if needed.
+   - **Logo versions:** dark themes (midnight, bold) use `logo`; light themes (clean, minimal, elegant)
+     use `logo_on_light`. A created logo has both (`logo.png` white, `logo-dark.png` dark). For an
+     uploaded logo, check it reads on the chosen theme. If it doesn't, ask for the other version.
+   - **Theme:** now make the theme preview (Part 1, question 9) and let them pick.
 3. **`autopilot/brand.json`:** copy `brand.example.json` and fill in every field from Part 1:
    name, handle, industry, audience, contact, offers (only real ones), pillars, avoid list, colors,
-   logo path, `voice`, schedule (`timezone`, `time`, `days` map, `plan_day`), `hashtags_always`
+   `theme`, `logo` and `logo_on_light` paths, `voice`, schedule (`timezone`, `time`, `days` map, `plan_day`), `hashtags_always`
    (their brand tag plus their city), `media_base_url` = `https://<username>.github.io/<repo>/media/`,
    and `repo` = `<username>/<repo>`.
 4. **`autopilot/voice.md`:** fill in `voice.template.md` from the answers. Delete the template braces.
-5. **Preview:** render one cover slide and one offer or CTA slide with `autopilot/render_post.py`
-   and show them. Adjust colors, logo or tone until they're happy.
+5. **Preview:** render one cover slide and one offer or CTA slide in their chosen theme with
+   `autopilot/render_post.py`, and show them. Adjust the theme, colors, logo or tone until they're happy.
+   They can change the theme any time later: just ask, or edit `theme` in brand.json.
 6. Commit everything and push to `main`.
 
 ## Part 4. Connect Instagram (Meta developer app, free)
@@ -180,6 +197,7 @@ Walk them through:
 Finish with a clear confirmation:
 
 - A table of the first week: **day, date, time, format, topic**.
+- Their **theme**, colors and reel voice.
 - **Posts per week**: N posts + M reels, at HH:MM their time, on which days.
 - When the weekly planning runs, and what they'll receive (a summary with the new topics).
 - What still needs them: replying to comments and DMs; telling the agent about new offers or prices

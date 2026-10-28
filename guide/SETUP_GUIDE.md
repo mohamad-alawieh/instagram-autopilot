@@ -115,9 +115,12 @@ If you're using the Claude wizard, it does this for you. To do it by hand:
    handle, industry, audience, contact, real offers and prices, topics ("pillars"), colors, time zone,
    which days get which format, and
    `media_base_url` = `https://<username>.github.io/<repo>/media/`.
-2. Put your logo at `autopilot/assets/logo.png`. A light or white logo works best on the dark post
-   background. No logo? Run `python3 autopilot/make_logo.py create "Your Name"`.
-3. Copy `autopilot/voice.template.md` to `autopilot/voice.md` and fill it in.
+2. Put your logo at `autopilot/assets/logo.png` (used on dark themes) and
+   `autopilot/assets/logo-dark.png` (used on light themes). No logo? Run
+   `python3 autopilot/make_logo.py create "Your Name"`, which makes both.
+3. **Pick a theme:** run `python3 autopilot/preview_themes.py` to see all 5 in your brand, then set
+   `"theme"` in brand.json to `midnight`, `clean`, `bold`, `minimal` or `elegant`.
+4. Copy `autopilot/voice.template.md` to `autopilot/voice.md` and fill it in.
 
 ## Step 7. Test it
 

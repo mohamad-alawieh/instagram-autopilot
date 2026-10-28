@@ -16,11 +16,11 @@ import json, os, subprocess, sys, tarfile, urllib.request, wave, shutil, tempfil
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, MEDIA, load_brand
+from common import ROOT, MEDIA, load_brand, tokens, base_css, logo_path, orbs_html
 
 BRAND = load_brand()
 OUT = MEDIA / "reels"
-LOGO = ROOT / BRAND.get("logo", "autopilot/assets/logo.png")
+LOGO = logo_path(BRAND)
 # Free Piper voices published on GitHub (no account needed). Pick one in brand.json "voice".
 VOICES = {
     "ryan": "voice-en-us-ryan-high",          # US male, clear
@@ -65,29 +65,22 @@ def speak(text, path):
         return w.getnframes() / w.getframerate()
 
 
-CSS_T = """*{margin:0;box-sizing:border-box}
-body{width:1080px;height:1920px;overflow:hidden;font-family:Poppins,sans-serif;color:#fff;position:relative;
-background:radial-gradient(circle at 85% 88%,#2f6bff 0,rgba(47,107,255,0) 45%),radial-gradient(circle at 0% 15%,#14408a 0,rgba(20,64,138,0) 40%),linear-gradient(160deg,#081a3a,#0c2a5c 55%,#123a86)}
-.logo{position:absolute;top:90px;left:80px;height:80px}.handle{position:absolute;top:112px;right:80px;font-size:28px;opacity:.85}
-.orb{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,#7cc0ff,#2f6bff 60%,#1b3f9e)}
-.el{position:absolute;left:80px;right:80px;opacity:0}.acc{color:#5fb2ff}
-h1{font-size:104px;line-height:1.05;font-weight:800;letter-spacing:-1px}
-.sub{font-size:48px;line-height:1.4;opacity:.92}
-.tag{display:inline-block;background:#2f6bff;border-radius:60px;padding:16px 38px;font-size:40px;font-weight:600}
-.btn{display:inline-block;background:#2f6bff;border-radius:80px;padding:30px 60px;font-size:46px;font-weight:700}
-.prog{position:absolute;bottom:0;left:0;height:10px;background:#5fb2ff}"""
-_c = BRAND["colors"]
-CSS = (CSS_T.replace("#081a3a", _c["bg1"]).replace("#0c2a5c", _c["bg2"]).replace("#123a86", _c["bg3"])
-       .replace("#14408a", _c["bg3"]).replace("#5fb2ff", _c["accent"]).replace("#7cc0ff", _c["accent"])
-       .replace("#2f6bff", _c["button"]).replace("#1b3f9e", _c["bg3"]).replace("color:#fff", "color:" + _c["text"])
-       .replace("font-family:Poppins", f"font-family:'{BRAND.get('font', 'Poppins')}',Poppins"))
+_K = tokens(BRAND)
+CSS = base_css(BRAND, 1080, 1920) + f"""
+.logo{{position:absolute;top:90px;left:80px;height:80px;max-width:520px;object-fit:contain}}
+.handle{{position:absolute;top:112px;right:80px;font-size:28px;opacity:.85}}
+.el{{position:absolute;left:80px;right:80px;opacity:0}}
+h1{{font-size:104px;line-height:1.06;font-weight:{_K['head_weight']};letter-spacing:-1px}}
+.sub{{font-size:48px;line-height:1.4;opacity:.9}}
+.btn{{padding:30px 60px;font-size:46px}}
+.prog{{position:absolute;bottom:0;left:0;height:10px;background:{_K['button']}}}"""
 
 JS = """const els=[...document.querySelectorAll('.el')].map(e=>({e,i:+e.dataset.in,o:+e.dataset.out}));
 const ease=x=>1-Math.pow(1-Math.min(Math.max(x,0),1),3);
 window.render=function(t){for(const {e,i,o} of els){const a=ease((t-i)/0.5),z=ease((o-t)/0.35),v=Math.min(a,z);
 e.style.opacity=v;e.style.transform=`translateY(${(1-a)*60-(1-z)*40}px)`;}
-document.getElementById('o1').style.transform=`translate(${Math.sin(t*.6)*30}px,${Math.cos(t*.5)*40}px)`;
-document.getElementById('o2').style.transform=`translate(${Math.cos(t*.4)*30}px,${Math.sin(t*.45)*50}px)`;
+const o1=document.getElementById('o1'),o2=document.getElementById('o2');
+if(o1){o1.style.transform=`translate(${Math.sin(t*.6)*30}px,${Math.cos(t*.5)*40}px)`;o2.style.transform=`translate(${Math.cos(t*.4)*30}px,${Math.sin(t*.45)*50}px)`;}
 document.getElementById('prog').style.width=(t/DUR*100)+'%';};"""
 
 
@@ -108,9 +101,8 @@ def build_html(spec, starts, ends, dur):
             parts.append(f'<div class="el" data-in="{a+1.2:.2f}" data-out="{b:.2f}" style="top:1000px"><div class="btn">{s["button"]}</div></div>')
             parts.append(f'<div class="el" data-in="{a+2.0:.2f}" data-out="{b:.2f}" style="top:1230px"><div class="sub" style="font-size:40px">Follow @{BRAND["handle"]}</div></div>')
     return (f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>'
-            '<div class="orb" id="o1" style="width:120px;height:120px;right:90px;top:300px"></div>'
-            '<div class="orb" id="o2" style="width:240px;height:240px;left:-100px;top:1400px;opacity:.7"></div>'
-            + (f'<img class="logo" src="{LOGO.as_uri()}">' if LOGO.exists() else f'<div class="logo" style="font-size:44px;font-weight:700">{BRAND["name"]}</div>')
+            + orbs_html(BRAND, "reel")
+            + (f'<img class="logo" src="{LOGO.as_uri()}">' if LOGO else f'<div class="logo" style="font-size:44px;font-weight:700">{BRAND["name"]}</div>')
             + f'<div class="handle">@{BRAND["handle"]}</div>'
             + "".join(parts) + f'<div class="prog" id="prog"></div><script>const DUR={dur:.2f};{JS}render(0);</script></body></html>')
 
